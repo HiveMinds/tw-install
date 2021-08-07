@@ -4,8 +4,9 @@ This installs taskwarrior and taskwarrior server for you on an Ubuntu device wit
 ## How to use (for users)
 Run the main code from the root of this repository with:
 ```
-git clone git@github.com:HiveMinds-EU/Taskwarrior-installation.git
-cd Taskwarrior-installation
+cd ~/.task
+git clone git@github.com:HiveMinds-EU/Taskwarrior-installation.git install
+cd install
 chmod +x main.sh
 ./main.sh
 ```
@@ -19,8 +20,9 @@ That's it, you can now add tasks with: `task add make pancakes` and sync it with
 ## How to use (for developers)
 First install the required submodules with:
 ```
-git clone git@github.com:HiveMinds-EU/Taskwarrior-installation.git
-cd Taskwarrior-installation
+cd ~/.task
+git clone git@github.com:HiveMinds-EU/Taskwarrior-installation.git install
+cd install
 chmod +x install-bats-libs.sh
 ./install-bats-libs.sh
 ```
