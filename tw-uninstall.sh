@@ -1,13 +1,13 @@
 # read hardcoded variables
-SOURCEDIR=$PWD
+#SOURCEDIR=$PWD
 source src/hardcoded_variables.txt
 
 # get installation dependent parameters
 LINUX_USERNAME=$(whoami)
-LINUX_GROUP=$(whoami)
-echo $LINUX_USERNAME
+#LINUX_GROUP=$(whoami)
+echo "$LINUX_USERNAME"
 IP=$(hostname -f)
-echo $IP
+echo "$IP"
 
 #git clone --recursive https://github.com/GothenburgBitFactory/taskserver.git
 #cd $SOURCEDIR/taskserver/ && echo | sudo checkinstall  -D -y
@@ -22,16 +22,16 @@ yes | sudo apt remove taskwarrior
 sudo rm -r taskserver
 
 sudo rm -r /var/taskd
-sudo rm -r /home/$LINUX_USERNAME/.task
-sudo rm -r /home/$LINUX_USERNAME/taskd # can be ommited
+sudo rm -r /home/"$LINUX_USERNAME"/.task
+sudo rm -r /home/"$LINUX_USERNAME"/taskd # can be ommited
 sudo rm /var/taskd.log
 sudo rm /var/taskd.pid
 sudo rm /var/userkey.txt
 sudo rm /usr/local/bin/taskd
 sudo rm /usr/local/bin/taskdctl
 
-sudo rm /home/$LINUX_USERNAME/.task
-sudo rm /home/$LINUX_USERNAME/.taskrc
+sudo rm /home/"$LINUX_USERNAME"/.task
+sudo rm /home/"$LINUX_USERNAME"/.taskrc
 sudo rm /usr/local/bin/taskd
 sudo rm /usr/local/bin/taskdctl
 
