@@ -3,12 +3,12 @@
 . src/D_configure_taskserver.sh
 
 # read hardcoded variables
-SOURCEDIR=$PWD
+SOURCE_DIR=$PWD
 
 # get installation dependent parameters
 LINUX_USERNAME=$(whoami)
-LINUX_GROUP=$(whoami)
-echo $LINUX_USERNAME
+#LINUX_GROUP=$(whoami)
+echo "$LINUX_USERNAME"
 
 # define the hostname
 #IP=localhost # Worked after hostname -f did not work (anymore) (Did not work the first time after it worked)
@@ -22,19 +22,19 @@ IP=$(hostname -f)
 #IP=127.0.1.1 #Can't use SSL_get_servername
 #IP=obfuscated ip4 #Can't use SSL_get_servername
 #IP=192.168.2.219
-echo $IP
+echo "$IP"
 
 # function to swap entire line in file that contains a substring
-function swapline_containing_string {
-  local OLD_LINE_PATTERN=$1; shift
-  local NEW_LINE=$1; shift
-  local FILE=$1
-  local NEW=$(echo "${NEW_LINE}" | sed 's/\//\\\//g')
-  touch "${FILE}"
-  sed -i '/'"${OLD_LINE_PATTERN}"'/{s/.*/'"${NEW}"'/;h};${x;/./{x;q100};x}' "${FILE}"
-  if [[ $? -ne 100 ]] && [[ ${NEW_LINE} != '' ]]
+function swap_line_containing_string {
+  local old_line_pattern=$1; shift
+  local new_line=$1; shift
+  local file=$1
+  local new=$(echo "${new_line}" | sed 's/\//\\\//g')
+  touch "${file}"
+  sed -i '/'"${old_line_pattern}"'/{s/.*/'"${new}"'/;h};${x;/./{x;q100};x}' "${file}"
+  if [[ $? -ne 100 ]] && [[ ${new_line} != '' ]]
   then
-    echo "${NEW_LINE}" >> "${FILE}"
+    echo "${new_line}" >> "${file}"
   fi
 }
 
@@ -54,7 +54,7 @@ yes | task add test task
 
 # clone, build and install taskserver (taskd)
 git clone --recursive https://github.com/GothenburgBitFactory/taskserver.git
-cd taskserver
+cd taskserver || exit
 cmake -DCMAKE_BUILD_TYPE=release .
 make
 yes | sudo make install
@@ -69,7 +69,7 @@ sudo mkdir -p $TASKDDATA
 
 # #https://gitpitch.com/GothenburgBitFactory/taskserver-setup#/9/2
 # ensure the user can access the TASKDDATA directory
-sudo chown -R $LINUX_USERNAME $TASKDDATA
+sudo chown -R "$LINUX_USERNAME" $TASKDDATA
 
 
 # #https://gitpitch.com/GothenburgBitFactory/taskserver-setup#/9/3
@@ -81,12 +81,12 @@ taskd init
 # replace the CN=localhost value in the vars file of the pki folder
 # of the downloaded taskserver repository with the chosen hostname
 # Note: the port is not included in the hostname
-swapline_containing_string "CN=" "CN=$IP" "$PWD/pki/vars"
+swap_line_containing_string "CN=" "CN=$IP" "$PWD/pki/vars"
 
 
 # #https://gitpitch.com/GothenburgBitFactory/taskserver-setup#/10/3
 # browse into the pki folder of the downloaded taskserver repo
-cd $PWD/pki
+cd "$PWD"/pki || exit
 
 # generate the api, server and ca certificate files based on the 
 # pki/vars in the downloaded taskserver repo
@@ -113,14 +113,15 @@ taskd config --force ca.cert     $TASKDDATA/ca.cert.pem
 
 #https://gitpitch.com/GothenburgBitFactory/taskserver-setup#/11
 # Configure taskserver to create a log- and pid file
-cd $TASKDDATA/..
+cd $TASKDDATA/.. || exit
 # TODO: make this path dynamic based on TASKDDATA folder
 # after the cleanup has been tested succesfully.
 taskd config --force log /var/taskd.log
 taskd config --force pid.file /var/taskd.pid
 
 # specify hostname that the taskserver uses (including port)
-taskd config --force server $IP:$PORT
+# shellcheck disable=SC2086
+taskd config --force server $IP:"$PORT"
 
 
 #https://gitpitch.com/GothenburgBitFactory/taskserver-setup#/12
@@ -134,7 +135,7 @@ sudo chmod 7777 /var/
 taskdctl start
 
 # check the taskserver is running
-ps -leaf | grep taskd
+ps -leaf | pgrep taskd
 
 
 #https://gitpitch.com/GothenburgBitFactory/taskserver-setup#/12/1
@@ -145,12 +146,13 @@ ps -leaf | grep taskd
 #https://gitpitch.com/GothenburgBitFactory/taskserver-setup#/14/1
 # create an organisation for your taskserver (that can have
 # one or more users)
-taskd add org $TW_ORGANISATION
+taskd add org "$TW_ORGANISATION"
 
 
 #https://gitpitch.com/GothenburgBitFactory/taskserver-setup#/14/2
 # Add user to newly created taskwarrior organisation and export key
-taskd add user $TW_ORGANISATION $TW_USERNAME > userkey.txt
+# shellcheck disable=SC2086
+taskd add user $TW_ORGANISATION "$TW_USERNAME" > userkey.txt
 # TODO: enable the user to add multiple taskwarrior users.
 # TODO: read the key from terminal output file instead
 # of from the organisation directory since that might
@@ -159,7 +161,7 @@ taskd add user $TW_ORGANISATION $TW_USERNAME > userkey.txt
 
 #https://gitpitch.com/GothenburgBitFactory/taskserver-setup#/14/3
 # generate a certificate for the newly added user
-cd $SOURCEDIR/taskserver/pki
+cd $SOURCE_DIR/taskserver/pki || exit
 ./generate.client first
 # NOTE: There is no capital in this certificate name, because
 # the certificate name does NOT have to match the actual username
@@ -191,14 +193,14 @@ yes | task config taskd.ca          -- ~/.task/ca.cert.pem
 
 #https://gitpitch.com/GothenburgBitFactory/taskserver-setup#/15/6
 # configure taskwarrior to use the hostname (and port) of the taskserver
-yes | task config taskd.server      -- $IP:$PORT
+yes | task config taskd.server      -- "$IP":"$PORT"
 
 # configure taskwarrior to use the uuid from the newly created taskwarrior user
 #read user id
 echo "Please enter uuid"
-USERUUID=$(ls /var/taskd/orgs/$TW_ORGANISATION/users/)
-echo $USERUUID
-yes | task config taskd.credentials -- $TW_ORGANISATION/$TW_USERNAME/$USERUUID
+USER_UUID=$(ls /var/taskd/orgs/"$TW_ORGANISATION"/users/)
+echo "$USER_UUID"
+yes | task config taskd.credentials -- "$TW_ORGANISATION"/"$TW_USERNAME"/"$USER_UUID"
 # TODO: read the taskwarrior user uuid from file
 # TODO: automatically enter the taskwarrior user uuid
 
@@ -218,14 +220,14 @@ enable_starting_taskd_server_at_boot
 
 ### Debugging:
 # Check whether the hostname can validate the ca certificate.
-openssl s_client -CAfile /home/$LINUX_USERNAME/.task/ca.cert.pem -host $IP -port $PORT
+openssl s_client -CAfile /home/"$LINUX_USERNAME"/.task/ca.cert.pem -host "$IP" -port "$PORT"
 
 # verify whether each individual certificate is valid w.r.t. the ca certificate
-certtool --verify --infile /home/$LINUX_USERNAME/.task/ca.cert.pem --load-ca-certificate /home/$LINUX_USERNAME/.task/ca.cert.pem
-certtool --verify --infile /home/$LINUX_USERNAME/.task/first.cert.pem --load-ca-certificate /home/$LINUX_USERNAME/.task/ca.cert.pem
+certtool --verify --infile /home/"$LINUX_USERNAME"/.task/ca.cert.pem --load-ca-certificate /home/"$LINUX_USERNAME"/.task/ca.cert.pem
+certtool --verify --infile /home/"$LINUX_USERNAME"/.task/first.cert.pem --load-ca-certificate /home/"$LINUX_USERNAME"/.task/ca.cert.pem
 
-certtool --verify --infile /home/$LINUX_USERNAME/.task/ca.cert.pem --load-ca-certificate /var/taskd/ca.cert.pem
-certtool --verify --infile /home/$LINUX_USERNAME/.task/first.cert.pem --load-ca-certificate /var/taskd/ca.cert.pem
+certtool --verify --infile /home/"$LINUX_USERNAME"/.task/ca.cert.pem --load-ca-certificate /var/taskd/ca.cert.pem
+certtool --verify --infile /home/"$LINUX_USERNAME"/.task/first.cert.pem --load-ca-certificate /var/taskd/ca.cert.pem
 
 certtool --verify --infile /var/taskd/api.cert.pem --load-ca-certificate /var/taskd/ca.cert.pem
 certtool --verify --infile /var/taskd/server.cert.pem --load-ca-certificate /var/taskd/ca.cert.pem
