@@ -1,5 +1,6 @@
 # read hardcoded variables
 #SOURCEDIR=$PWD
+taskdctl stop
 source src/hardcoded_variables.txt
 
 # get installation dependent parameters
