@@ -19,7 +19,14 @@ write_to_log() {
 }
 
 remove_logs() {
-  rm -r src/logs/*
+	{ # try
+		$(rm -r src/logs/*)
+		#save your output
+		true
+	} || { # catch
+		# save log for exception 
+		true
+	}
 }
 
 read_user_key_from_log() {
