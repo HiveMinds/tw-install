@@ -5,11 +5,13 @@ stages:
 install:
   stage: install
   script:
-    chmod +x tw-install.sh
-    ./tw-install.sh
+    - chmod +x tw-install.sh
+    - ./tw-install.sh
 
 test:
   stage: test
   script:
-    chmod +x test.sh
-    ./test.sh
+    - chmod +x install-bats-libs.sh
+    - ./install-bats-libs.sh
+    - chmod +x test.sh
+    - ./test.sh
