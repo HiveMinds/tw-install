@@ -16,6 +16,9 @@ setup() {
 @test "Test if either the home/$USER/anaconda3 or .../anaconda directory exists." {
 	# TODO assert file does not exists
 	#assert_file_exist /home/some_path
+
+	# create log directory
+	mkdir -p src/logs
 	
 	# create log file
 	echo "helloworld" > src/logs/test_log_file.txt
