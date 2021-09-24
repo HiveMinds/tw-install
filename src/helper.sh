@@ -14,13 +14,13 @@ write_to_log() {
 
   # append remaining args to file
   for i in '$*'; do
-    cat <<<"$i" >>"$dest_path"
+    cat echo "$i" >>"$dest_path"
   done
 }
 
 remove_logs() {
 	{ # try
-		$(rm -r src/logs/*)
+		$rm -r src/logs/*
 		#save your output
 		true
 	} || { # catch

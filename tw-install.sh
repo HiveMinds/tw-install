@@ -13,7 +13,7 @@ echo "$LINUX_USERNAME"
 # define the hostname
 #IP=localhost # Worked after hostname -f did not work (anymore) (Did not work the first time after it worked)
 #IP=localhost # did not work anymore after it stopped working and after hostname -f did not work anymore either
-#IP=$(hostname -f) #yields: Can't use SSL_get_servername BUT IT DOES WORK! 
+#IP=$(hostname -f) #yields: Can't use SSL_get_servername BUT IT DOES WORK!
 #IP=$(hostname -f) #was connected but did not verify certificate
 #IP=$(hostname -f) # Did not work anymore after localhost did not work anymore
 IP=$(hostname -f)
@@ -25,11 +25,12 @@ IP=$(hostname -f)
 echo "$IP"
 
 # function to swap entire line in file that contains a substring
-function swap_line_containing_string {
+swap_line_containing_string() {
   local old_line_pattern=$1; shift
   local new_line=$1; shift
   local file=$1
-  local new=$(echo "${new_line}" | sed 's/\//\\\//g')
+  local new;
+  new=$(echo "${new_line}" | sed 's/\//\\\//g')
   touch "${file}"
   sed -i '/'"${old_line_pattern}"'/{s/.*/'"${new}"'/;h};${x;/./{x;q100};x}' "${file}"
   if [[ $? -ne 100 ]] && [[ ${new_line} != '' ]]
@@ -88,7 +89,7 @@ swap_line_containing_string "CN=" "CN=$IP" "$PWD/pki/vars"
 # browse into the pki folder of the downloaded taskserver repo
 cd "$PWD"/pki || exit
 
-# generate the api, server and ca certificate files based on the 
+# generate the api, server and ca certificate files based on the
 # pki/vars in the downloaded taskserver repo
 ./generate
 
@@ -161,7 +162,7 @@ taskd add user $TW_ORGANISATION "$TW_USERNAME" > userkey.txt
 
 #https://gitpitch.com/GothenburgBitFactory/taskserver-setup#/14/3
 # generate a certificate for the newly added user
-cd $SOURCE_DIR/taskserver/pki || exit
+cd "$SOURCE_DIR"/taskserver/pki || exit
 ./generate.client first
 # NOTE: There is no capital in this certificate name, because
 # the certificate name does NOT have to match the actual username
