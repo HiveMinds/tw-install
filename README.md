@@ -26,6 +26,7 @@ First install the required submodules with:
 cd ~/.task
 git clone git@github.com:HiveMinds-EU/tw-install.git install
 cd install
+rm -r test/libs/*
 chmod +x install-bats-libs.sh
 ./install-bats-libs.sh
 ```
