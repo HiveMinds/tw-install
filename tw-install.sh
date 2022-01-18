@@ -59,8 +59,17 @@ while true; do
     read ver
     echo ""
     case $ver in
+        # [1-9]|[1-1][0-2] is regex which means only number from 1 to 12 is matched in case 1
+        # where  * [1-9] is 1 to 9 without preceding 0
+        #        * |  is OR gate or condition
+        #        * [1-1][0-2] is 10 to 12 numbers
+        # if you want 1 to 99 than regex will be like this [1-9]|[1-9][1-9]
+
+        # case for range (1-12)
         [1-9]|[1-1][0-2] ) VERSION=$(cat taskwarrior.versions|grep "$ver)" | awk '{print $2}'|head -1) && break;;
-        [a-zA-Z] ) echo "Choose index number of your version from above list"
+        
+        # case for any alphabet
+        [a-zA-Z] | * ) echo "Choose index number of your version from above list"
     esac
 done
 
