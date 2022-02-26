@@ -1,4 +1,7 @@
-# Taskwarrior Installer [![Build Status](https://travis-ci.org/HiveMinds-EU/tw-install.svg?branch=refactor_to_shell)](https://travis-ci.org/HiveMinds-EU/tw-install)
+# Taskwarrior Installer 
+
+[![Build Status](https://raw.githubusercontent.com/a-t-0/gitlab-ci-build-statuses/master/hiveminds/tw-install/develop/build_status.svg)](http://2gzyxa5ihm7nsggfxnu52rck2vv4rvmdlkiu3zzui5du4xyclen53wid.onion/)
+
 This installs taskwarrior and taskwarrior server for you on an Ubuntu device (or on Windows with the WSL app, I did not try Mac yet.) with 2 simple commands. In my experience Taskwarrior (and Timewarrior) are increadibly powerfull tools to monitor and improve your effectiveness in many aspects of life, yet I found setting it up [a bit challenging](https://www.youtube.com/watch?v=nuE4v5xKIWc), so I automated the procedure. I invite you to have a look at [how to expand this toolkit](https://github.com/HiveMinds-EU/tw-install/milestones)! Feel free to pick up an issue (claim it in the comments to prevent double work), fork the repository, and send a pull request with your solution :)
 
 ## How to use (for users)
