@@ -49,8 +49,38 @@ yes | sudo apt install uuid-dev
 yes | sudo apt install cmake
 yes | sudo apt install gnutls-bin
 
-# install taskwarrior and add first task
-yes | sudo apt install taskwarrior
+#Install Taskwarrior
+VERSION=latest
+
+while true; do    
+    echo -e "Select the version of taskwarrior to install: \n"
+    cat taskwarrior.versions
+    echo -e "Choose from above list ( 1-12 )"
+    read ver
+    echo ""
+    case $ver in
+        # [1-9]|[1-1][0-2] is regex which means only number from 1 to 12 is matched in case 1
+        # where  * [1-9] is 1 to 9 without preceding 0
+        #        * |  is OR gate or condition
+        #        * [1-1][0-2] is 10 to 12 numbers
+        # if you want 1 to 99 than regex will be like this [1-9]|[1-9][1-9]
+
+        # case for range (1-12)
+        [1-9]|[1-1][0-2] ) VERSION=$(cat taskwarrior.versions|grep "$ver)" | awk '{print $2}'|head -1) && break;;
+        
+        # case for any alphabet
+        [a-zA-Z] | * ) echo "Choose index number of your version from above list"
+    esac
+done
+
+echo $VERSION
+if [ $VERSION != "latest" ]; then
+    yes | sudo apt install taskwarrior=$VERSION
+else
+    yes | sudo apt install taskwarrior
+fi
+
+# Add first task
 yes | task add test task
 
 # clone, build and install taskserver (taskd)
