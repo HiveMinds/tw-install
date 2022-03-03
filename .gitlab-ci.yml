@@ -6,7 +6,7 @@ install:
   stage: install
   script:
     - chmod +x tw-install.sh
-    #- ./tw-install.sh
+    - ./tw-install.sh
 
 test:
   stage: test
