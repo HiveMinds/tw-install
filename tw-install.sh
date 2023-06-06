@@ -248,3 +248,4 @@ openssl x509 -noout -in /var/taskd/server.cert.pem -subject
 # Open a new terminal and perform a task sync with the taskserver to
 # see what happends in the taskserver
 # task sync
+source src/run_taskserver_at_boot.sh
