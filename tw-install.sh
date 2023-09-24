@@ -248,4 +248,9 @@ openssl x509 -noout -in /var/taskd/server.cert.pem -subject
 # Open a new terminal and perform a task sync with the taskserver to
 # see what happends in the taskserver
 # task sync
-source src/run_taskserver_at_boot.sh
+
+
+# At this point in the code, it is at:
+# /home/name/git/Hiveminds/tw-install/taskserver/pki 
+# so it should go back to the SOURCE_DIR
+cd $SOURCE_DIR && source src/run_taskserver_at_boot.sh
