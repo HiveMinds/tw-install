@@ -53,6 +53,8 @@ yes | sudo apt install libgnutls28-dev
 yes | sudo apt install uuid-dev
 yes | sudo apt install cmake
 yes | sudo apt install gnutls-bin
+yes | sudo apt install cron
+
 
 # install taskwarrior and add first task
 yes | sudo apt install taskwarrior

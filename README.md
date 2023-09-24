@@ -28,7 +28,20 @@ chmod +x tw-uninstall.sh
 (Currently) you have to reboot the system before you install it again using the `tw-install.sh` file.
 
 ## Docker (not working)
-A short headsup, the `docker build .` is currently not working as kindly pointed out [here](https://github.com/HiveMinds/tw-install/issues/102)
+### Build
+```shell
+docker build -t tw-install .
+```
+### Run container
+```shell
+docker run \
+-p 53589:53589 \
+-e TW_USERNAME=YourUsername \
+-e TW_ORGANISATION=YourOrganization \
+--name tw-instance \
+-d \
+tw-install 
+```
 
 ## How to use (for developers)
 First install the required submodules with:
