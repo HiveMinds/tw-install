@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 write_to_log() {
 
   # read incoming arguments
-  _local dest_dir="$1"
-  _local dest_file="$2"
-  _local dest_path="$dest_dir$dest_file"
+  local dest_dir="$1"
+  local dest_file="$2"
+  local dest_path="$dest_dir$dest_file"
 
   shift # eat first argument
   shift # eat second argument
@@ -30,7 +30,7 @@ remove_logs() {
 }
 
 read_user_key_from_log() {
-  _local value="$(<src/logs/D_26_add_user_to_taskserver.txt)"
-  _local result=${value:14:36}
+  local value="$(<src/logs/D_26_add_user_to_taskserver.txt)"
+  local result=${value:14:36}
   echo "$result"
 }

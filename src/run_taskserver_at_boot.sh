@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 run_at_boot_command="export TASKDDATA=$TASKDDATA && taskdctl start"
 # Check if the cron job already exists
 if crontab -l | grep -q "$run_at_boot_command"; then

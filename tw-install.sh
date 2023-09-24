@@ -1,3 +1,4 @@
+#!/bin/bash
 . src/hardcoded_variables.txt
 . src/helper.sh
 . src/D_configure_taskserver.sh
@@ -33,8 +34,12 @@ swap_line_containing_string() {
   new=$(echo "${new_line}" | sed 's/\//\\\//g')
   touch "${file}"
   sed -i '/'"${old_line_pattern}"'/{s/.*/'"${new}"'/;h};${x;/./{x;q100};x}' "${file}"
-  if [[ $? -ne 100 ]] && [[ ${new_line} != '' ]]
-  then
+  
+  # Check if the exit status of the previous command is not equal to 100
+  # and if the variable ${new_line} is not an empty string
+  if [[ $? -ne 100 ]] && [[ ${new_line} != '' ]]; then
+    # If both conditions are met, append the value of ${new_line} to the
+    # file specified by ${file}
     echo "${new_line}" >> "${file}"
   fi
 }
