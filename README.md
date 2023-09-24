@@ -36,8 +36,8 @@ docker build -t tw-install .
 ```shell
 docker run \
 -p 53589:53589 \
--e TW_USERNAME=YourUsername \
--e TW_ORGANISATION=YourOrganization \
+-e TW_USERNAME=First \
+-e TW_ORGANISATION=Public \
 --name tw-instance \
 -d \
 tw-install 
