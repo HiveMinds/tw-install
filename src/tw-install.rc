@@ -1,0 +1,17 @@
+### tw-install.rc configuration file 
+TASKDIR=~/.task
+TASKDDIR=/var/task
+PLATFORM=linux
+MOBILE_PLATFORM=android
+MOBILE_SOURCE=fdroid
+PACKAGE_MANAGER=apt
+HOOK_DIR=~/.task/hooks
+TMP_DIR=~/tmp
+TASKWIKI_DIR=~/.task/wiki
+TASKNOTES_DIR=~/.task/notes
+TASKTHEME_DIR=~/.task/theme
+BIN_DIR=~/.local/bin
+WEB_DIR=~/var/www/something
+BACKUP_DIR=~/backup/taskwarrior
+BACKUP_FMT=zip
+EDITOR=vim
